@@ -21,7 +21,9 @@ async function run(){
         await client.connect();
         const database = client.db('mercedes_benz');
         const productsCollection = database.collection('products');
-        const ordersCollection = database.collection('orders')
+        const ordersCollection = database.collection('orders');
+        const usersCollection = database.collection('users')
+
 
         //GET 6 PRODUCTS
         app.get('/products', async(req, res)=> {
@@ -70,6 +72,37 @@ async function run(){
             console.log('deleting result id', result)
             res.json(result)
         });
+
+        //VERIFY ADMIN
+        app.get('/users/:email', async(req, res)=>{
+            const email = req.params.email;
+            const query = {email: email};
+            const user = await usersCollection.findOne(query);
+            let isAdmin = false;
+            if(user?.role === 'admin'){
+                isAdmin = true;
+            }
+            res.json({admin: isAdmin})
+        })
+
+        //POST USERS
+        app.post('/users', async(req, res)=>{
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            console.log(result);
+            res.json(result);
+        });
+
+        //GIVE ADMIN ROLE TO THE USER
+        app.put('/users/admin', async(req, res)=>{
+            const user = req.body;
+            console.log('user', user);
+            const filter = {email: user.email};
+            const updateDoc = {$set: {role: 'admin'}};
+            const result = await usersCollection.updateOne(filter, updateDoc);
+            res.json(result);
+
+        })
     
     }
     finally{
