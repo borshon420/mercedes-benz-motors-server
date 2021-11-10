@@ -32,10 +32,10 @@ async function run(){
             res.send(products);
         });
 
-        //GET 10 PRODUCTS
+        //GET MULTIPLE PRODUCTS
         app.get('/products/explore', async(req, res)=> {
             const cursor = productsCollection.find({});
-            const products = await cursor.limit(10).toArray();
+            const products = await cursor.toArray();
             res.send(products);
         });
 
@@ -47,6 +47,16 @@ async function run(){
             res.json(product)
         });
 
+        //POST A PRODUCT
+        app.post('/products', async(req, res)=>{
+            const product = req.body;
+            const result = await productsCollection.insertOne(product);
+            console.log(result);
+            res.json(result);
+        });
+
+        
+
         //GET ORDER
         app.get('/orders', async(req, res)=>{
             const email = req.query.email;
@@ -54,7 +64,16 @@ async function run(){
             const cursor = ordersCollection.find(query);
             const orders = await cursor.toArray();
             res.json(orders)
-        })
+        });
+
+        //GET ALL ORDERS
+        app.get('/orders/name', async(req, res)=>{
+            const name = req.query.name;
+            const cursor = ordersCollection.find(name);
+            const orders = await cursor.toArray();
+            console.log(orders);
+            res.json(orders)
+        });
 
         //POST ORDER API
         app.post('/orders', async(req, res)=> {
