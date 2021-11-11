@@ -22,7 +22,8 @@ async function run(){
         const database = client.db('mercedes_benz');
         const productsCollection = database.collection('products');
         const ordersCollection = database.collection('orders');
-        const usersCollection = database.collection('users')
+        const usersCollection = database.collection('users');
+        const reviewsCollection = database.collection('reviews');
 
 
         //GET 6 PRODUCTS
@@ -121,7 +122,22 @@ async function run(){
             const result = await usersCollection.updateOne(filter, updateDoc);
             res.json(result);
 
-        })
+        });
+
+        //GET REVIEW
+        app.get('/reviews', async(req, res)=> {
+            const cursor = reviewsCollection.find({});
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+        });
+
+        // POST REVIEW API
+        app.post('/reviews', async(req, res)=> {
+            const review = req.body;
+            const result = await reviewsCollection.insertOne(review);
+            console.log(result)
+            res.json(result)
+        });
     
     }
     finally{
