@@ -52,22 +52,20 @@ async function run(){
         app.post('/products', async(req, res)=>{
             const product = req.body;
             const result = await productsCollection.insertOne(product);
-            console.log(result);
             res.json(result);
         });
 
-        // DELETE API
+        // DELETE PRODUCT API
         app.delete('/products/:id', async(req, res)=> {
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
             const result = await productsCollection.deleteOne(query);
-            console.log('deleting result id', result)
             res.json(result)
         });
 
         
 
-        //GET ORDER
+        //GET ORDER BY ID
         app.get('/orders', async(req, res)=>{
             const email = req.query.email;
             const query = {email: email};
@@ -76,12 +74,11 @@ async function run(){
             res.json(orders)
         });
 
-        //GET ALL ORDERS
+        //GET ALL ORDERS BY NAME
         app.get('/orders/name', async(req, res)=>{
             const name = req.query.name;
             const cursor = ordersCollection.find(name);
             const orders = await cursor.toArray();
-            console.log(orders);
             res.json(orders)
         });
 
@@ -89,16 +86,14 @@ async function run(){
         app.post('/orders', async(req, res)=> {
             const order = req.body;
             const result = await ordersCollection.insertOne(order);
-            console.log(result)
             res.json(result)
         });
 
-        // DELETE API
+        // DELETE  ORDER API
         app.delete('/orders/:id', async(req, res)=> {
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
             const result = await ordersCollection.deleteOne(query);
-            console.log('deleting result id', result)
             res.json(result)
         });
 
@@ -118,7 +113,6 @@ async function run(){
         app.post('/users', async(req, res)=>{
             const user = req.body;
             const result = await usersCollection.insertOne(user);
-            console.log(result);
             res.json(result);
         });
 
@@ -144,9 +138,9 @@ async function run(){
         app.post('/reviews', async(req, res)=> {
             const review = req.body;
             const result = await reviewsCollection.insertOne(review);
-            console.log(result)
             res.json(result)
         });
+
     
     }
     finally{
